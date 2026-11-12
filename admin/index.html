@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Nautilus Hunt · Game master</title>
+</head>
+<body>
+  <header>
+    <h1>Nautilus Hunt <small>game master</small></h1>
+    <button id="logout" class="secondary" hidden>Log out</button>
+  </header>
+
+  <section id="login-panel" class="panel narrow">
+    <h2>Sign in</h2>
+    <form id="login-form">
+      <label for="login">Login</label>
+      <input id="login" autocomplete="username" required />
+      <label for="password">Password</label>
+      <input id="password" type="password" autocomplete="current-password" required />
+      <button type="submit">Sign in</button>
+      <p id="login-error" class="error" role="alert"></p>
+    </form>
+  </section>
+
+  <div id="dashboard" hidden>
+    <section class="panel map-panel">
+      <h2>Live map</h2>
+      <p class="hint">Players and objects refresh every 5 seconds. Click the map to pick a spawn position.</p>
+      <div id="map"></div>
+      <ul class="legend">
+        <li><span class="dot explorer"></span>Explorer</li>
+        <li><span class="dot rival"></span>Rival</li>
+        <li><span class="dot artifact"></span>Artifact</li>
+        <li><span class="dot secured"></span>Secured artifact</li>
+        <li><span class="dot creature"></span>Creature</li>
+      </ul>
+    </section>
+
+    <div class="grid">
+      <section class="panel">
+        <h2>Game area</h2>
+        <p class="hint">Zoom the map on the playing field, then save the visible area.</p>
+        <button id="save-zrr">Use visible area as game area</button>
+        <p id="zrr-status" class="status"></p>
+      </section>
+
+      <section class="panel">
+        <h2>Object lifetime</h2>
+        <form id="ttl-form">
+          <label for="ttl">Time to live (seconds)</label>
+          <input id="ttl" type="number" min="1" max="86400" value="60" required />
+          <button type="submit">Save</button>
+        </form>
+        <p id="ttl-status" class="status"></p>
+      </section>
+
+      <section class="panel">
+        <h2>Spawn an object</h2>
+        <form id="object-form">
+          <label for="object-type">Type</label>
+          <select id="object-type">
+            <option value="artifact">Artifact</option>
+            <option value="creature">Creature</option>
+          </select>
+          <label for="object-lat">Latitude</label>
+          <input id="object-lat" type="number" step="any" required />
+          <label for="object-lon">Longitude</label>
+          <input id="object-lon" type="number" step="any" required />
+          <button type="submit">Spawn</button>
+        </form>
+        <p id="object-status" class="status"></p>
+      </section>
+    </div>
+
+    <section class="panel">
+      <h2>Scoreboard</h2>
+      <div id="totals" class="totals"></div>
+      <table>
+        <thead>
+          <tr><th>Player</th><th>Team</th><th>Artifacts</th><th>Captures</th><th>Status</th></tr>
+        </thead>
+        <tbody id="scoreboard"></tbody>
+      </table>
+    </section>
+  </div>
+</body>
+</html>
