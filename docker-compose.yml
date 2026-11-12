@@ -1,0 +1,21 @@
+services:
+  auth:
+    build: ./auth-mock
+    environment:
+      JWT_SECRET: ${JWT_SECRET:-dev-secret-change-me}
+
+  api:
+    build: ./api
+    environment:
+      AUTH_SERVER_URL: http://auth:8080
+    depends_on:
+      - auth
+
+  web:
+    build:
+      context: .
+      dockerfile: infra/web.Dockerfile
+    ports:
+      - "${WEB_PORT:-8080}:80"
+    depends_on:
+      - api

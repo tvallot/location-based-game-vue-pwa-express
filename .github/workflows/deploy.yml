@@ -1,0 +1,39 @@
+# Deployment to a Linux VM (nginx + PM2), as done during the project.
+# Manual trigger only. Requires the SSH_PRIVATE_KEY, VM_HOST and VM_USER secrets.
+name: Deploy
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      TARGET: ${{ secrets.VM_USER }}@${{ secrets.VM_HOST }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Build front-ends
+        run: |
+          (cd mobile && npm ci && npm run build-only)
+          (cd admin && npm ci && npm run build)
+
+      - name: Set up SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -H "${{ secrets.VM_HOST }}" >> ~/.ssh/known_hosts
+
+      - name: Upload static files
+        run: |
+          rsync -rlz --delete --exclude admin mobile/dist/ "$TARGET:/var/www/game/"
+          rsync -rlz --delete admin/dist/ "$TARGET:/var/www/game/admin/"
+
+      - name: Deploy and restart the API
+        run: |
+          rsync -rlz --delete --exclude node_modules --exclude log api/ "$TARGET:/opt/game-api/"
+          ssh "$TARGET" "cd /opt/game-api && npm ci --omit=dev && pm2 startOrRestart ecosystem.config.cjs"
