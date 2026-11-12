@@ -1,0 +1,24 @@
+# Dependencies and build output
+node_modules/
+dist/
+*.tsbuildinfo
+.eslintcache
+
+# Logs
+log/
+*.log
+
+# Local environment
+.env
+
+# Editors / OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# AI assistant files
+.claude/
+.codex/
+CLAUDE.md
+AGENTS.md
